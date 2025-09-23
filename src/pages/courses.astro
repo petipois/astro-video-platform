@@ -1,0 +1,93 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+import { getCollection } from "astro:content";
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+} from "@/components/starwind/card";
+import { Button } from "@/components/starwind/button";
+import { Badge } from "@/components/starwind/badge";
+const data = await getCollection("courses");
+const courses = data.map((course) => ({
+    ...course.data,
+}));
+---
+
+<Layout>
+    <section class="py-20 container mx-auto px-4" id="courses">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                Explore Our Courses
+            </h2>
+            <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+                From beginner to expert, we have the perfect Astro course for
+                your skill level
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {
+                courses.map((course: any) => (
+                    <Card class="course-card group">
+                        <CardHeader>
+                            <div class="flex items-center justify-between mb-2">
+                                <Badge>{course.level}</Badge>
+                            </div>
+                            <CardTitle class="text-xl mb-2 group-hover:text-primary transition-colors">
+                                {course.title}
+                            </CardTitle>
+                            <CardDescription class="text-base leading-relaxed">
+                                {course.description}
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <img src="https://placehold.co/600x400" alt="" />
+                            <div class="flex items-center justify-between text-sm text-muted-foreground mb-4">
+                                <div class="flex items-center">
+                                    {course.lessons.length} lessons
+                                </div>
+                                <div class="flex items-center">
+                                    {course.duration}
+                                </div>
+                            </div>
+
+                            {course.progress > 0 && (
+                                <div class="mb-4">
+                                    <div class="flex items-center justify-between text-sm mb-2">
+                                        <span class="text-muted-foreground">
+                                            Progress
+                                        </span>
+                                        <span class="text-primary font-medium">
+                                            {course.progress}%
+                                        </span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div
+                                            class="progress-fill"
+                                            style={{
+                                                width: `${course.progress}%`,
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            <Button
+                                href={`/courses/${course.slug}`}
+                                class="w-full btn-secondary group-hover:bg-primary group-hover:text-primary-foreground transition-all"
+                            >
+                                {course.progress > 0
+                                    ? "Continue Course"
+                                    : "Start Course"}
+                            </Button>
+                        </CardContent>
+                    </Card>
+                ))
+            }
+        </div>
+    </section>
+</Layout>

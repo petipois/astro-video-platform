@@ -1,0 +1,344 @@
+---
+import type { GetStaticPaths } from "astro";
+import CourseLayout from "@/layouts/CourseLayout.astro";
+import { getCollection } from "astro:content";
+import Progress from "@/components/starwind/progress";
+import { MuxPlayer } from "@mux/mux-player-astro";
+
+// Define dynamic paths
+export const getStaticPaths = (async () => {
+  const courses = await getCollection("courses");
+  const paths = [];
+
+  for (const course of courses) {
+    if (course.data.lessons) {
+      for (const lesson of course.data.lessons) {
+        paths.push({
+          params: {
+            slug: course.data.slug,
+            lesson: lesson.number.toString(),
+          },
+          props: {
+            course: course.data,
+            lesson,
+            allLessons: course.data.lessons,
+          },
+        });
+      }
+    }
+  }
+
+  return paths;
+}) satisfies GetStaticPaths;
+
+// Get the props from getStaticPaths
+const { course, lesson, allLessons } = Astro.props;
+
+// Find current lesson index for navigation
+const currentIndex = allLessons.findIndex(
+  (l: any) => l.number === lesson.number,
+);
+const previousLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : null;
+const nextLesson =
+  currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null;
+
+if (!course || !lesson) {
+  return Astro.redirect("/404");
+}
+---
+
+<CourseLayout>
+  <div class="max-w-7xl mx-auto">
+    <!-- Breadcrumb Navigation -->
+    <nav class="mb-8">
+      <div class="flex items-center space-x-2 text-sm text-gray-500">
+        <a href="/courses" class="hover:text-blue-600 transition-colors"
+          >Courses</a
+        >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"></path>
+        </svg>
+        <a
+          href={`/courses/${course.slug}`}
+          class="hover:text-blue-600 transition-colors"
+        >
+          {course.title}
+        </a>
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"></path>
+        </svg>
+        <span class="text-gray-800 font-medium">{lesson.title}</span>
+      </div>
+    </nav>
+
+    <div class="grid lg:grid-cols-4 gap-8">
+      <!-- Lessons Sidebar -->
+      <aside class="lg:col-span-1">
+        <div class="sticky top-8">
+          <!-- Course Progress -->
+          <div
+            class="bg-white rounded-2xl shadow-xl p-6 border border-gray-100 mb-6"
+          >
+            <div class="flex items-center gap-3 mb-4">
+              <div
+                class="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-500 rounded-lg flex items-center justify-center"
+              >
+                <svg
+                  class="w-5 h-5 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  ></path>
+                </svg>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-800">
+                Course Progress
+              </h3>
+            </div>
+
+            <div class="mb-4">
+              <div class="flex justify-between text-sm mb-2">
+                <span class="text-gray-600"
+                  >Lesson {lesson.number} of {allLessons.length}</span
+                >
+                <span class="text-blue-600 font-medium">
+                  {Math.round((lesson.number / allLessons.length) * 100)}%
+                </span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <Progress
+                  class="bg-blue-400"
+                  value={Math.round((lesson.number / allLessons.length) * 100)}
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Lessons List -->
+          <div
+            class="bg-white rounded-2xl shadow-xl p-6 border border-gray-100"
+          >
+            <h3 class="text-lg font-semibold text-gray-800 mb-6">
+              All Lessons
+            </h3>
+
+            <div class="space-y-2">
+              {
+                allLessons.map((lessonItem: any, index: number) => (
+                  <a
+                    href={`/courses/${course.slug}/${lessonItem.number}`}
+                    class={`group flex items-center gap-3 p-3 rounded-lg transition-all duration-200 ${
+                      lessonItem.number === lesson.number
+                        ? "bg-blue-50 border border-blue-200"
+                        : "hover:bg-gray-50 border border-transparent"
+                    }`}
+                  >
+                    <div
+                      class={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+                        lessonItem.number === lesson.number
+                          ? "bg-blue-100 text-blue-600"
+                          : "bg-gray-100 text-gray-600 group-hover:bg-blue-100 group-hover:text-blue-600"
+                      }`}
+                    >
+                      <span class="text-sm font-medium">
+                        {lessonItem.number}
+                      </span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <h4
+                        class={`text-sm font-medium truncate transition-colors ${
+                          lessonItem.number === lesson.number
+                            ? "text-blue-700"
+                            : "text-gray-800 group-hover:text-blue-600"
+                        }`}
+                      >
+                        {lessonItem.title}
+                      </h4>
+                      {lessonItem.duration && (
+                        <p class="text-xs text-gray-500 mt-1">
+                          {lessonItem.duration}
+                        </p>
+                      )}
+                    </div>
+                    {lessonItem.number === lesson.number && (
+                      <div class="flex-shrink-0">
+                        <div class="w-2 h-2 bg-blue-500 rounded-full" />
+                      </div>
+                    )}
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="lg:col-span-3">
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100">
+          <!-- Lesson Header -->
+          <div class="p-8 border-b border-gray-100">
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <div class="flex items-center gap-2 mb-2">
+                  <span
+                    class="text-sm font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full"
+                  >
+                    Lesson {lesson.number}
+                  </span>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                  {lesson.title}
+                </h1>
+                <div class="text-gray-600">
+                  {
+                    lesson.description
+                      ? lesson.description
+                      : "No description available for this lesson."
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Video Player -->
+            {
+              lesson.videoId && (
+                <div class="p-8 border-b border-gray-100">
+                  <div class="aspect-video rounded-xl overflow-hidden bg-gray-900">
+                    <MuxPlayer
+                      playbackId={lesson.videoId}
+                      metadata={{ video_title: lesson.title }}
+                      class="w-full h-full"
+                    />
+                  </div>
+                </div>
+              )
+            }
+
+            <!-- Lesson Content -->
+            <div class="p-8">
+              <div class="prose prose-lg max-w-none">
+                {
+                  lesson.content ? (
+                    <div set:html={lesson.content} />
+                  ) : (
+                    <div>
+                      <p class="text-gray-600">
+                        No additional content for this lesson.
+                      </p>
+                    </div>
+                  )
+                }
+
+                <!-- Navigation Buttons -->
+                <div
+                  class="flex justify-between items-center mt-12 pt-8 border-t border-gray-100"
+                >
+                  {
+                    previousLesson ? (
+                      <a
+                        href={`/courses/${course.slug}/${previousLesson.number}`}
+                        class="flex items-center gap-2 px-6 py-3 border-2 border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 group"
+                      >
+                        <svg
+                          class="w-5 h-5 group-hover:-translate-x-1 transition-transform"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M15 19l-7-7 7-7"
+                          />
+                        </svg>
+                        <div class="text-left">
+                          <div class="text-xs text-gray-500">Previous</div>
+                          <div class="text-sm">{previousLesson.title}</div>
+                        </div>
+                      </a>
+                    ) : (
+                      <div />
+                    )
+                  }
+
+                  {
+                    nextLesson ? (
+                      <a
+                        href={`/courses/${course.slug}/${nextLesson.number}`}
+                        class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 group"
+                      >
+                        <div class="text-right">
+                          <div class="text-xs text-blue-100">Next</div>
+                          <div class="text-sm">{nextLesson.title}</div>
+                        </div>
+                        <svg
+                          class="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </a>
+                    ) : (
+                      <a
+                        href={`/courses/${course.slug}`}
+                        class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                      >
+                        <span>Course Complete!</span>
+                        <svg
+                          class="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      </a>
+                    )
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</CourseLayout>

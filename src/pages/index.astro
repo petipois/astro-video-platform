@@ -1,43 +1,27 @@
 ---
-import Welcome from "../components/Welcome.astro";
 import Layout from "../layouts/Layout.astro";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/starwind/card";
 import { Button } from "@/components/starwind/button";
-import { Badge } from "@/components/starwind/badge"
-import { any } from "astro:schema";
 const heroImage = "/images/astro-hero.jpg";
-const courses = [
-	{
-		title: "Astro for Beginners",
-		description: "Get started with Astro and build your first website.",
-		level: "Beginner",
-		lessons: 12,
-		duration: "3h 45m",
-		students: 1200,
-		progress: 0,
-		id: 1,
-	}
-];
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+
+
 ---
 
 <Layout>
 	{/* Hero Section */}
 	<section class="relative overflow-hidden">
 		<div
-			class="absolute inset-0 bg-gradient-to-br from-background via-background/90 to-transparent z-10"
+			class="absolute inset-0 bg-gray-800  to-transparent z-10"
 		>
 		</div>
-		<img
+		<!-- <img
 			src={heroImage}
 			alt="Astro JS Course Platform Hero"
 			class="absolute inset-0 w-full h-full object-cover opacity-80"
-		/>
+		/>-->
 		<div class="relative z-20 container mx-auto px-4 py-24 md:py-32">
 			<div class="max-w-4xl mx-auto text-center animate-fade-up">
 				<h1
-					class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
+					class="text-5xl md:text-7xl font-bold mb-6 bg-blue-300 to bg-blue-800 bg-clip-text text-transparent"
 				>
 					Master Astro JS
 				</h1>
@@ -53,105 +37,12 @@ const courses = [
 					<Button class="btn-hero animate-glow">
 						Start Learning Today
 					</Button>
-					<Button class="btn-secondary">
-						Watch Demo
+					<Button class="btn-secondary" href="/#courses">
+						Browse Courses
 					</Button>
 				</div>
-				<div
-					class="mt-12 flex flex-wrap justify-center gap-8 text-sm text-muted-foreground"
-				>
-					<div class="flex items-center">
-						4,297+ Students
-					</div>
-					<div class="flex items-center">
-						6 Complete Courses
-					</div>
-					<div class="flex items-center">
-						26+ Hours Content
-					</div>
-				</div>
-			</div>
+				
 		</div>
 	</section>
 
-	{/* Courses Grid */}
-	<section class="py-20 container mx-auto px-4">
-		<div class="text-center mb-16">
-			<h2 class="text-4xl md:text-5xl font-bold mb-4">
-				Explore Our Courses
-			</h2>
-			<p class="text-xl text-muted-foreground max-w-2xl mx-auto">
-				From beginner to expert, we have the perfect Astro course for
-				your skill level
-			</p>
-		</div>
-
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-			{
-				courses.map((course:any) => (
-					<Card
-						
-						class="course-card group"
-					>
-						<CardHeader>
-							<div class="flex items-center justify-between mb-2">
-								<Badge
-									class="bg-accent/10 text-accent font-medium"
-								>
-									{course.level}
-								</Badge>
-								<div class="flex items-center text-muted-foreground text-sm">
-								
-									{course.students.toLocaleString()}
-								</div>
-							</div>
-							<CardTitle class="text-xl mb-2 group-hover:text-primary transition-colors">
-								{course.title}
-							</CardTitle>
-							<CardDescription class="text-base leading-relaxed">
-								{course.description}
-							</CardDescription>
-						</CardHeader>
-						<CardContent>
-							<div class="flex items-center justify-between text-sm text-muted-foreground mb-4">
-								<div class="flex items-center">
-									{course.lessons} lessons
-								</div>
-								<div class="flex items-center">
-									{course.duration}
-								</div>
-							</div>
-
-							{course.progress > 0 && (
-								<div class="mb-4">
-									<div class="flex items-center justify-between text-sm mb-2">
-										<span class="text-muted-foreground">
-											Progress
-										</span>
-										<span class="text-primary font-medium">
-											{course.progress}%
-										</span>
-									</div>
-									<div class="progress-bar">
-										<div
-											class="progress-fill"
-											style={{
-												width: `${course.progress}%`,
-											}}
-										/>
-									</div>
-								</div>
-							)}
-
-								<Button href={`/course/${course.id}`} class="w-full btn-secondary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
-									{course.progress > 0
-										? "Continue Course"
-										: "Start Course"}
-								</Button>
-						</CardContent>
-					</Card>
-				))
-			}
-		</div>
-	</section>
 </Layout>
