@@ -1,19 +1,25 @@
 ---
-import {Button}  from "@/components/starwind/button"
+import { Button } from "@/components/starwind/button";
 ---
- <header class="border-b border-border bg-black backdrop-blur-sm sticky top-0 z-50 text-white">
-        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 bg-gradient-to-r from-gray-400 to-gray-500 rounded-lg flex items-center justify-center">
-              <span class="text-white font-bold text-lg">A</span>
-            </div>
-            <span class="text-xl font-bold">AstroAcademy</span>
-          </div>
-          <nav class="hidden md:flex items-center space-x-6">
-            <a href="/" >Home</a>
-            <a href="/courses" >Courses</a>
-         
-          </nav>
-          <Button class="bg-blue-700 hover:bg-blue-800">Sign In</Button>
+
+<header
+  class="border-b border-border bg-black backdrop-blur-sm sticky top-0 z-50 text-white"
+>
+  <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+    <div class="flex items-center space-x-2">
+      <a href="/"
+        ><div
+          class="w-8 h-8 bg-gradient-to-r from-gray-400 to-gray-500 rounded-lg flex items-center justify-center"
+        >
+          <span class="text-white font-bold text-lg">A</span>
         </div>
-      </header>
+        <span class="text-xl font-bold">AstroAcademy</span>
+      </a>
+    </div>
+    <nav class="hidden md:flex items-center space-x-6">
+      <a href="/">Home</a>
+      <a href="/courses">Courses</a>
+    </nav>
+    <Button class="bg-blue-700 hover:bg-blue-800">Sign In</Button>
+  </div>
+</header>

@@ -1,4 +1,5 @@
 ---
+import "@/styles/starwind.css";
 import type { GetStaticPaths } from "astro";
 import CourseLayout from "@/layouts/CourseLayout.astro";
 import { getCollection } from "astro:content";
@@ -30,7 +31,7 @@ export const getStaticPaths = (async () => {
 
   return paths;
 }) satisfies GetStaticPaths;
-
+import Breadcrumbs from "@/components/Breadcrumbs.astro";
 // Get the props from getStaticPaths
 const { course, lesson, allLessons } = Astro.props;
 
@@ -49,45 +50,7 @@ if (!course || !lesson) {
 
 <CourseLayout>
   <div class="max-w-7xl mx-auto">
-    <!-- Breadcrumb Navigation -->
-    <nav class="mb-8">
-      <div class="flex items-center space-x-2 text-sm text-gray-500">
-        <a href="/courses" class="hover:text-blue-600 transition-colors"
-          >Courses</a
-        >
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 5l7 7-7 7"></path>
-        </svg>
-        <a
-          href={`/courses/${course.slug}`}
-          class="hover:text-blue-600 transition-colors"
-        >
-          {course.title}
-        </a>
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 5l7 7-7 7"></path>
-        </svg>
-        <span class="text-gray-800 font-medium">{lesson.title}</span>
-      </div>
-    </nav>
+   <Breadcrumbs course={course} lesson={lesson} />
 
     <div class="grid lg:grid-cols-4 gap-8">
       <!-- Lessons Sidebar -->
@@ -131,6 +94,7 @@ if (!course || !lesson) {
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
                 <Progress
+                variant="primary"
                   class="bg-blue-400"
                   value={Math.round((lesson.number / allLessons.length) * 100)}
                 />

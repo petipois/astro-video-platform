@@ -20,7 +20,6 @@ lessons:
    title: "Adding Images"
    videoId: "ylZsnDnE2CtVDyqABq7s9Qqa2ORITu9kwvYcyMp2o7g"
    description: "This is a video about how to add images astro"
-   content: "a pdf file"
  - number: 5 
    title: "What is Content Collections?"
    videoId: "ylZsnDnE2CtVDyqABq7s9Qqa2ORITu9kwvYcyMp2o7g"
@@ -28,10 +27,12 @@ lessons:
  - number: 6
    title: "Making a full astro website"
    videoId: "ylZsnDnE2CtVDyqABq7s9Qqa2ORITu9kwvYcyMp2o7g"
-   description: "Reviewing and creating a full site"
+   description: "Reviewing and creating a full website"
 level: "Beginner"
 duration: "1 hr"
 tags: ["beginner","astro","basic"]
 ---
 
-# Introduction to Astro
+# Astro Beginner Course
+
+## This course is a comprehensive beginner guide to Astro

@@ -1,8 +1,42 @@
 ---
-import "@/styles/starwind.css"
+import "@/styles/starwind.css";
+const siteTitle = "Astro Video Platform";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
 ---
-<main class="min-h-screen bg-black-to-gray-500 from-slate-50 to-blue-50">
-    <div class="container mx-auto px-6 py-12">
-        <slot />
-    </div>
-</main>
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{siteTitle}</title>
+    </head>
+    <body>
+        <Header />
+        <main
+            class="min-h-screen bg-black-to-gray-500 from-slate-50 to-blue-50"
+        >
+            <div class="container mx-auto px-6 py-12">
+                <slot />
+            </div>
+        </main>
+        <Footer />
+    </body>
+</html>
+
+<style is:global>
+    html,
+    body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+</style>

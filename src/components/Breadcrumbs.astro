@@ -1,0 +1,45 @@
+---
+const { course, lesson } = Astro.props;
+---
+<!-- Breadcrumb Navigation -->
+    <nav class="mb-8">
+      <div class="flex items-center space-x-2 text-sm text-gray-500">
+        <a href="/courses" class="hover:text-blue-600 transition-colors"
+          >Courses</a
+        >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"></path>
+        </svg>
+        <a
+          href={`/courses/${course.slug}`}
+          class="hover:text-blue-600 transition-colors"
+        >
+          {course.title}
+        </a>
+      {lesson && (
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"></path>
+          </svg>
+          <span class="text-gray-700">{lesson.title}</span>
+  
+      )}
+      </div>
+    </nav>
